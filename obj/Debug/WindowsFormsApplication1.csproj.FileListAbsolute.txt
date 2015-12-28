@@ -1,0 +1,39 @@
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+c:\users\администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\Администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Program.cs
+C:\Users\Администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Data.mdf
+C:\Users\Администратор\documents\visual studio 2013\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Data_log.ldf
+G:\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+G:\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+G:\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+G:\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+G:\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+G:\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form2.resources
+G:\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+G:\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+G:\WindowsFormsApplication1\bin\Debug\Program.cs
+G:\WindowsFormsApplication1\bin\Debug\Data.mdf
+G:\WindowsFormsApplication1\bin\Debug\Data_log.ldf
+G:\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+G:\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+E:\Project Eva\2\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+E:\Project Eva\2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+E:\Project Eva\2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+E:\Project Eva\2\WindowsFormsApplication1\bin\Debug\Program.cs
+E:\Project Eva\2\WindowsFormsApplication1\bin\Debug\Data.mdf
+E:\Project Eva\2\WindowsFormsApplication1\bin\Debug\Data_log.ldf
+E:\Project Eva\2\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+E:\Project Eva\2\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+E:\Project Eva\2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\Project Eva\2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+E:\Project Eva\2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form2.resources
+E:\Project Eva\2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+E:\Project Eva\2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
