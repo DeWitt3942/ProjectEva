@@ -74,15 +74,26 @@ namespace WindowsFormsApplication1
         public class Message
         {
             public string user_id;
+            public string from_id;
             public string body;
             public long message_id;
-            public Message(string user, string text, long id = 0)
-            { user_id = user; body = text; message_id = id; }
-            public Message(XmlNode xml)
+            public Message(string user,  string text, string from, long id = 0)
+            { user_id = user; body = text; message_id = id; from_id = from; }
+            private static Dictionary<long, Message> messages = new Dictionary<long, Message>();
+            public static Message EMPTY = new Message("", "","");
+            private Message(XmlNode xml)
             {
                 user_id = xml.SelectSingleNode("user_id").InnerText;
+                from_id = xml.SelectSingleNode("from_id").InnerText;
                 body = xml.SelectSingleNode("body").InnerText;
                 message_id = long.Parse(xml.SelectSingleNode("date").InnerText);
+            }
+            public static Message addNewMessage(XmlNode xml)
+            {
+                Message m = new Message(xml);
+                addQuestion(m);
+                messages[m.message_id] = m;
+                return m;
             }
             public static string send(string to, string text)
             {
@@ -92,40 +103,105 @@ namespace WindowsFormsApplication1
             {
                 return user_id + ": " + body;
             }
-        }
+            private static Dictionary<String, HashSet<Message>> messagesWithKeyWords = new Dictionary<string, HashSet<Message>>();
+            public HashSet<String> getKeyWords()
+            {
+                HashSet<String> keywords = new HashSet<string>(this.body.Split(' '));
+                
+                    
 
-        public List<String> getMessagesFromXMLString(string xmlString) 
+                /*
+                if (this.body.Contains("привіт"))
+                {
+                    keywords.Add("привіт");
+                    Console.WriteLine("+1");
+                }*/
+                return keywords;
+            }
+            public static void addQuestion(Message m)
+            {
+                foreach (String key in m.getKeyWords())
+                {
+                    if (!messagesWithKeyWords.ContainsKey(key))
+                        messagesWithKeyWords[key] = new HashSet<Message>();
+                    messagesWithKeyWords[key].Add(m);
+                }
+            }
+            public static HashSet<Message> getQuestions(HashSet<String> keywords)
+            {
+                bool first = true;
+                HashSet<Message> result = new HashSet<Message>();
+                foreach (String key in keywords)
+                {
+
+                    if (!messagesWithKeyWords.ContainsKey(key))
+                    {
+                        result.Clear();
+                        return result;
+                    }
+
+                    if (first)
+                    {
+                        result = messagesWithKeyWords[key];
+                        first ^= true;
+                    }
+
+                    //result = result.Intersect(messagesWithKeyWords[key]) as HashSet<Message>;
+                    result = new HashSet<Message>(result.Intersect(messagesWithKeyWords[key]));
+                }
+                return result;
+            }
+        }
+        public List<Message> getMessagesFromXMLString(string xmlString) 
         {
             try {
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(xmlString);
                 XmlNode node = doc.SelectSingleNode("response").SelectSingleNode("items");
                 XmlNodeList messages = node.SelectNodes("message");
-                List<String> result = new List<string>();
+                List<Message> result = new List<Message>();
                 foreach (XmlNode messnode in messages)
                 {
-                    result.Add(messnode.SelectSingleNode("user_id").InnerText + ": " + messnode.SelectSingleNode("body"));
+
+                    result.Add(Message.addNewMessage(messnode));
+//                # result.Add(messnode.SelectSingleNode("from_id").InnerText + ": " + messnode.SelectSingleNode("body").InnerText);
 
                 }
                 return result; }
             catch (Exception e)
             {
-                return new List<String>();
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xmlString);
+                if (doc.SelectSingleNode("error") != null)
+                {
+                    List<Message> result = new List<Message>();
+                    result.Add(Message.EMPTY);
+                    return result;
+                }
+
+                return new List<Message>();
             }
         }
-        public List<String> getCompleteDialogue(String user_id)
+        public List<Message> getCompleteDialogue(String user_id)
         {
             int offset = 0;
-            List<String> result = new List<string>();
+            List<Message> result = new List<Message>();
             
 
             while (true)
             {
-                List<String> tempresult = getMessagesFromXMLString(utils.GET_http(vkReq("messages.getHistory", "offset="+offset.ToString() + "&count=10&user_id="+ Settings1.Default.send_id)));
+                List<Message> tempresult = getMessagesFromXMLString(utils.GET_http(vkReq("messages.getHistory", "offset="+offset.ToString() + "&count=200&user_id="+ Settings1.Default.send_id)));
                 // MessageBox.Show(tempresult.Count.ToString());
+                if (result.Count > 1000)
+                    break;
                 if (tempresult.Count == 0)
                     break;
-                foreach (String s in tempresult)
+                if (tempresult.Count==1 && tempresult[0]==Message.EMPTY)
+                {
+                    Thread.Sleep(300);
+                    continue;
+                }
+                foreach (Message s in tempresult)
                     result.Add(s);
                 offset += tempresult.Count;
             }

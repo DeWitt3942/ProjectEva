@@ -15,73 +15,19 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-        
+        public static Form1 thisForm;
         public Form1()
         {
             InitializeComponent();
             auth();
-            mquery = new Stack<Tuple<string,string>>();
-           // testAuth();
+            mquery = new Stack<Tuple<string, string>>();
+            //utils = Utils.getInstance();
+            // testAuth();
+            thisForm = this;
         }
-
-        
-        public class User
-        {
-            public String id;
-            public String first_name, last_name;
-            public static Dictionary<string, User> users = new Dictionary<string,  User>();
-            
-            public User(String iden, String first, String last)
-            { id = iden; first_name = first; last_name = last; }
-            public User(XmlNode node)
-            {
-                id = node.SelectSingleNode("id").InnerText;
-                first_name = node.SelectSingleNode("first_name").InnerText;
-                last_name = node.SelectSingleNode("last_name").InnerText;
-            }
-            public static void addUser(string id)
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(GET_http(vkReq("users.get", "user_ids="+id)));
-                users.Add(id, new User(doc.SelectSingleNode("response").SelectSingleNode("user")));
-                
-            }
-            public static User getUser(string id)
-            {
-                if (users.ContainsKey(id))
-                    return users[id];
-                addUser(id);
-                return users[id];
-
-            }
-            
-        }
-        public class Message
-        {
-            public string user_id;
-            public string body;
-            public long message_id;
-            public Message(string user, string text, long id = 0)
-            { user_id = user; body = text; message_id = id; }
-            public Message(XmlNode xml)
-            {
-                user_id = xml.SelectSingleNode("user_id").InnerText;
-                body = xml.SelectSingleNode("body").InnerText;
-                message_id = long.Parse(xml.SelectSingleNode("date").InnerText);
-            }
-            public static string send(string to, string text)
-            {
-                return GET_http(vkReq("messages.send", "user_id=" + to + "&message=" + text));
-            }
-        }
-        public Thread newThread;
-        public Tuple<String, String> ans;
-        public static String result = "";
-        private long lastmessage_id = 0;
-        private Logic logic;
         public void auth()
         {
-        
+
             int appId = 5079358;
             String scope = "messages";
             String url = "https://oauth.vk.com/authorize?client_id=" + appId + "&display=popup&redirect_uri=http://api.vk.com/blank.html&scope=" + scope + "&response_type=token&v=5.37";
@@ -90,13 +36,22 @@ namespace WindowsFormsApplication1
             WebBrowser browser = (WebBrowser)f2.Controls["webBrowser1"];
             browser.Navigate(url);
             newThread = new Thread(testAuth);
-           newThread.Start();
+            newThread.Start();
         }
+        private Utils utils = Utils.getInstance();
+        private VKutils vkutils = VKutils.getInstance();
+
+        public Thread newThread;
+        public Tuple<String, String> ans;
+        public static String result = "";
+        private long lastmessage_id = 0;
+        private Logic logic;
+
         Stack<Tuple<string, string>> mquery;
         public void makeMagic(string resp)
         {
             XmlDocument doc = new XmlDocument();
-            
+
             doc.LoadXml(resp);
             mquery.Clear();
             long last = lastmessage_id;
@@ -106,80 +61,69 @@ namespace WindowsFormsApplication1
                 if (long.Parse(mes.SelectSingleNode("id").InnerText) <= last)
                     break;
                 mquery.Push(new Tuple<string, string>(mes.SelectSingleNode("from_id").InnerText, mes.SelectSingleNode("body").InnerText));
-              
-                
+
+
             }
-            
-            
-            while (mquery.Count>0)
+
+
+            while (mquery.Count > 0)
             {
-            
+
                 var msg = mquery.Pop();
                 if (msg.Item1 != Settings1.Default.user_id)
-                    if (msg.Item2!="")
+                    if (msg.Item2 != "")
                         logic.push(msg.Item1, msg.Item2);
-                
 
-                
+
+
             }
-            
-//            Thread.Sleep(100);
+
+            Thread.Sleep(100);
             ans = logic.getAns();
             if (ans.Item1 != "")
             {
-                Message.send(ans.Item1, ans.Item2);
-              //  lastmessage_id++;
+
+                VKutils.Message.send(ans.Item1, ans.Item2);
+                //  lastmessage_id++;
             }
-                
-        }
-        string getLastMessageId()
-        {
-            string res = GET_http(vkReq("messages.getHistory", "count=1&user_id=" + Settings1.Default.send_id));
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(res);
-            return doc.SelectSingleNode("response").SelectSingleNode("items").SelectSingleNode("message").SelectSingleNode("id").InnerText;
+
         }
 
         public void testAuth()
         {
-            while (!Settings1.Default.authenticated);
+            while (!Settings1.Default.authenticated) ;
             logic = Logic.getInstance();
-            lastmessage_id = long.Parse(getLastMessageId());
+            //logic.init();
+            while (Settings1.Default.send_id == "") ;
+            utils.printToFile("dialog.txt", vkutils.getCompleteDialogue(Settings1.Default.send_id));
+            //now , lets do it
+            HashSet<String> helloKeywords = new HashSet<String>();
+            helloKeywords.Add("привіт");
+            var hellos = VKutils.Message.getQuestions(helloKeywords);
+            utils.printToFile("hellos.txt", hellos.ToList());
+            //process
+            return;
             while (true)
             {
                 if (textBox1.Text != "")
                 {
                     try
                     {
-                        string resp = GET_http(vkReq("messages.getHistory", "count=10&user_id=" + Settings1.Default.send_id));
+                        string resp = utils.GET_http(vkutils.vkReq("messages.getHistory", "count=10&user_id=" + Settings1.Default.send_id));
 
                         makeMagic(resp);
                     }
                     catch { }
                 }
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(2000);
             }
-            
+
 
         }
-        public static string vkReq(string method, string p)
-        {
-            return "https://api.vk.com/method/" + method + ".xml?" + p + "&v=5.37&access_token=" + Settings1.Default.token;
-        }
-        
-        public static string GET_http(string url)
-        {
-            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            System.Net.WebRequest req = System.Net.WebRequest.Create(url);
-            System.Net.WebResponse res = req.GetResponse();
-            System.IO.Stream stream = res.GetResponseStream();
-            System.IO.StreamReader sr = new System.IO.StreamReader(stream);
-            return sr.ReadToEnd();
-            
-        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -188,11 +132,22 @@ namespace WindowsFormsApplication1
             {
                 long id = long.Parse(textBox1.Text);
                 Settings1.Default.send_id = id.ToString();
-                lastmessage_id = int.Parse(getLastMessageId());
-            }catch
+            }
+            catch
             {
                 MessageBox.Show("Error, fuck you");
             }
+        }
+        HashSet<String> keywords = new HashSet<String>();
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            keywords = new HashSet<String>(textBox2.Text.Split(' '));
+            var res = VKutils.Message.getQuestions(keywords);
+            listBox1.Items.Clear();
+            foreach(VKutils.Message item in res)
+                
+                listBox1.Items.Add(item.ToString());
+            
         }
     }
 }

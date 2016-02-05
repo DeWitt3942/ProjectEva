@@ -24,13 +24,13 @@ namespace WindowsFormsApplication1
         }
 
 
-        public void printToFile(String filename, List<String> whatToType)
+        public void printToFile<T>(String filename, List<T> whatToType)
         {
             MessageBox.Show(whatToType.Count.ToString());
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename))
             {
-                foreach (String each in whatToType)
-                    file.WriteLine(each);
+                foreach (T each in whatToType)
+                    file.WriteLine(each.ToString());
             }
 
         }
@@ -46,7 +46,6 @@ namespace WindowsFormsApplication1
             return sr.ReadToEnd();
 
         }
-
 
     }
 }

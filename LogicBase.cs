@@ -108,7 +108,7 @@ namespace WindowsFormsApplication1
                 return "хз, шо сказати";
             if (isHello(question))
 
-                return "Привіт, " + Form1.User.getUser(logic.to).first_name;
+                return "Привіт, " + VKutils.User.getUser(logic.to).first_name;
 
             if (logic.angryness > 10)
                 return "Ну що ти хочеш?";
